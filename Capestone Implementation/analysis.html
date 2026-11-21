@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 1 & 2: Stock Analysis & Preprocessing - Stock Price Forecasting Framework</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Live Ticker Bar -->
+    <div class="ticker-bar">
+        <div class="ticker-wrap" id="live-ticker-wrap">
+            <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Loading Market Feeds...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-lg-4">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Stock<span class="text-cyan">Forecaster</span></span>
+            </a>
+            <button class="navbar-toggler text-white border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html"><i class="fas fa-house"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="analysis.html"><i class="fas fa-magnifying-glass-chart"></i> Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="prediction.html"><i class="fas fa-brain"></i> Predictions</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="reports.html"><i class="fas fa-file-lines"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html"><i class="fas fa-circle-info"></i> About</a></li>
+                </ul>
+                <div class="ms-lg-3" id="backend-status-badge">
+                    <span class="badge-bullish"><i class="fas fa-circle-check"></i> C++ Backend</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container-fluid px-lg-4 py-4 flex-grow-1 position-relative">
+        <div id="analysis-spinner" class="spinner-backdrop active">
+            <div class="text-center">
+                <div class="spinner-border text-cyan mb-2" role="status" style="width: 3rem; height: 3rem;"></div>
+                <div class="text-white fw-semibold">Analyzing Stock in C++ Engine...</div>
+            </div>
+        </div>
+
+        <!-- Module Breadcrumb & Identity Banner -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35);">
+                <span class="badge bg-primary text-white">MODULE 1 & MODULE 2</span>
+                <span class="text-cyan small fw-bold">Data Ingestion, Preprocessing & Technical Analytics</span>
+            </div>
+            <div class="text-secondary small">
+                <i class="fas fa-server text-cyan me-1"></i> Engine: Native C++17 • Storage: SQLite3 Embedded
+            </div>
+        </div>
+
+        <!-- Section: MODULE 1 - Stock Selection & Date Range Filtering Control -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary text-white px-2 py-1">MODULE 1</span>
+                    <h5 class="text-white mb-0"><i class="fas fa-filter text-cyan me-2"></i>Data Ingestion & Date-Range Selection</h5>
+                </div>
+                <span class="text-secondary small" id="available-dates-hint">Available data: Loading dates...</span>
+            </div>
+
+            <div class="row g-3 align-items-end">
+                <!-- Stock Selection -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-magnifying-glass me-1"></i> Stock Symbol</label>
+                    <select id="analysis-stock-select" class="form-select form-select-dark">
+                        <option value="TCS">TCS - Tata Consultancy Services Ltd (NSE)</option>
+                        <option value="INFY">INFY - Infosys Limited (NSE)</option>
+                        <option value="RELIANCE">RELIANCE - Reliance Industries Limited (NSE)</option>
+                        <option value="AAPL">AAPL - Apple Inc. (NASDAQ)</option>
+                        <option value="GOOGL">GOOGL - Alphabet Inc. (NASDAQ)</option>
+                        <option value="MSFT">MSFT - Microsoft Corporation (NASDAQ)</option>
+                    </select>
+                </div>
+
+                <!-- Quick Date Range Presets -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-clock me-1"></i> Quick Range Preset</label>
+                    <div class="btn-group w-100" role="group">
+                        <button type="button" class="btn btn-outline-muted btn-sm quick-date-btn" data-preset="1M">1M</button>
+                        <button type="button" class="btn btn-outline-muted btn-sm quick-date-btn" data-preset="3M">3M</button>
+                        <button type="button" class="btn btn-outline-muted btn-sm quick-date-btn" data-preset="6M">6M</button>
+                        <button type="button" class="btn btn-outline-muted btn-sm quick-date-btn active" data-preset="ALL">ALL</button>
+                    </div>
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-lg-2 col-sm-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-calendar-alt me-1"></i> Start Date</label>
+                    <input type="date" id="filter-start-date" class="form-control form-control-dark">
+                </div>
+
+                <!-- End Date -->
+                <div class="col-lg-2 col-sm-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-calendar-check me-1"></i> End Date</label>
+                    <input type="date" id="filter-end-date" class="form-control form-control-dark">
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="col-lg-2 col-12 d-flex gap-2">
+                    <button class="btn btn-cyan flex-grow-1" id="btn-apply-filter">
+                        <i class="fas fa-filter"></i> Apply Filter
+                    </button>
+                    <button class="btn btn-outline-muted" id="btn-reset-filter" title="Reset to All Data">
+                        <i class="fas fa-rotate"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stock Overview Header Banner -->
+        <div class="card-dark mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h2 class="text-white fw-bold mb-0" id="analysis-symbol">TCS</h2>
+                        <span class="badge bg-primary text-white" id="analysis-market">NSE (India)</span>
+                        <span class="badge-bullish" id="analysis-signal-badge">BUY</span>
+                    </div>
+                    <div class="text-secondary" id="analysis-company-name">Tata Consultancy Services Ltd</div>
+                </div>
+                <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                    <div class="display-6 fw-bold text-white mb-0" id="analysis-current-price">—</div>
+                    <div id="analysis-price-change" class="small">—</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: MODULE 3 (Visualization) & MODULE 2 (Analytical Engine) Grid -->
+        <div class="row g-4 mb-4">
+            <!-- Price Movement & Volume Charts -->
+            <div class="col-lg-8">
+                <div class="card-dark mb-4">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                            <h5 class="text-white mb-0"><i class="fas fa-chart-line text-cyan me-2"></i>Historical Price Movement Chart</h5>
+                        </div>
+                        <span class="badge bg-dark border border-secondary text-cyan" id="history-records-count">Showing: 180 records</span>
+                    </div>
+                    <div class="chart-container" style="min-height: 330px;">
+                        <canvas id="analysis-price-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Volume Bar Chart -->
+                <div class="card-dark">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                        <h6 class="text-white mb-0"><i class="fas fa-chart-column text-cyan me-2"></i>Daily Trading Volume (Shares)</h6>
+                    </div>
+                    <div class="chart-container" style="min-height: 140px; height: 140px;">
+                        <canvas id="analysis-volume-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Indicators Suite & Transparent Rule System -->
+            <div class="col-lg-4">
+                <div class="card-dark h-100">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <span class="badge bg-success text-white px-2 py-1">MODULE 2</span>
+                        <h5 class="text-white mb-0"><i class="fas fa-gauge-high text-cyan me-2"></i>Technical Indicator Suite</h5>
+                    </div>
+                    
+                    <div class="d-flex flex-column gap-3 mb-4">
+                        <div class="p-3 rounded-3" style="background: #0b1329; border: 1px solid var(--card-border);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-secondary small fw-bold">Relative Strength Index (RSI 14)</span>
+                                <strong class="text-white" id="tech-rsi">—</strong>
+                            </div>
+                            <div class="progress" style="height: 6px; background: #1e293b;">
+                                <div id="tech-rsi-bar" class="progress-bar bg-info" style="width: 50%;"></div>
+                            </div>
+                            <div class="d-flex justify-content-between text-muted small mt-1" style="font-size: 0.75rem;">
+                                <span>30 (Oversold)</span>
+                                <span>70 (Overbought)</span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-3" style="background: #0b1329; border: 1px solid var(--card-border);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-secondary small fw-bold">MACD (12, 26, 9)</span>
+                                <strong class="text-white" id="tech-macd">—</strong>
+                            </div>
+                            <div class="d-flex justify-content-between text-secondary small">
+                                <span>Signal: <strong id="tech-macd-signal">—</strong></span>
+                                <span>Hist: <strong id="tech-macd-hist">—</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-3" style="background: #0b1329; border: 1px solid var(--card-border);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-secondary small fw-bold">Bollinger Bands (20, 2σ)</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-secondary small">
+                                <span>Lower: <strong class="bearish" id="tech-bb-lower">—</strong></span>
+                                <span>Mid: <strong class="text-cyan" id="tech-bb-mid">—</strong></span>
+                                <span>Upper: <strong class="bullish" id="tech-bb-upper">—</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="p-3 rounded-3" style="background: #0b1329; border: 1px solid var(--card-border);">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-secondary small fw-bold">Moving Averages (SMA)</span>
+                            </div>
+                            <div class="d-flex justify-content-between text-secondary small">
+                                <span>20 SMA: <strong id="tech-sma20">—</strong></span>
+                                <span>50 SMA: <strong id="tech-sma50">—</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transparent Rules Explanation List -->
+                    <h6 class="text-white mb-2"><i class="fas fa-list-check text-cyan me-2"></i>Analytical Rationale (C++ Rules Engine):</h6>
+                    <div id="tech-reasons-list" class="d-flex flex-column gap-2 small text-secondary">
+                        <div>Evaluating technical indicators...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: MODULE 1 - Preprocessing & Data Cleaning Panel -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary text-white px-2 py-1">MODULE 1</span>
+                    <div>
+                        <h5 class="text-white mb-0"><i class="fas fa-broom text-cyan me-2"></i>Data Ingestion & Preprocessing Module</h5>
+                        <span class="text-secondary small">C++ pipeline: Missing value interpolation, temporal deduplication, Min-Max & Z-Score normalization</span>
+                    </div>
+                </div>
+                <button class="btn btn-cyan btn-sm" id="btn-run-preprocess">
+                    <i class="fas fa-arrows-rotate"></i> Run C++ Preprocessing
+                </button>
+            </div>
+
+            <!-- Preprocessing Stats Grid -->
+            <div class="row g-3 mb-3" id="preprocess-stats-row">
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Raw Records</span>
+                        <h5 class="text-white mb-0" id="prep-raw-count">—</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Cleaned Records</span>
+                        <h5 class="text-cyan mb-0" id="prep-cleaned-count">—</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Missing Handled</span>
+                        <h5 class="text-white mb-0" id="prep-missing-count">0</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Duplicates Dropped</span>
+                        <h5 class="text-white mb-0" id="prep-dup-count">0</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Min Price</span>
+                        <h5 class="bearish mb-0" id="prep-min-price">—</h5>
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-4 col-6">
+                    <div class="p-3 rounded text-center" style="background: #0b1329;">
+                        <span class="text-secondary small">Max Price</span>
+                        <h5 class="bullish mb-0" id="prep-max-price">—</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Normalized Sample Display -->
+            <div class="p-3 rounded" style="background: #0b1329; border: 1px solid var(--card-border);">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-white small fw-bold"><i class="fas fa-sliders text-cyan me-1"></i> Normalized & Standardized Value Samples:</span>
+                    <span class="badge bg-dark border border-secondary text-secondary">Min-Max [0, 1] & Z-Score Normalization</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-dark-custom" style="font-size: 0.8rem;">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Actual Close</th>
+                                <th>Min-Max Normalized [0, 1]</th>
+                                <th>Z-Score Standardized (σ)</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preprocess-samples-tbody">
+                            <tr><td colspan="5" class="text-center text-secondary">Click "Run C++ Preprocessing" to inspect normalized vectors.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: MODULE 3 - Full Historical Stock Price Table & CSV Export -->
+        <div class="card-dark">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                    <div>
+                        <h5 class="text-white mb-0"><i class="fas fa-database text-cyan me-2"></i>Historical Stock Dataset (OHLCV)</h5>
+                        <span class="text-secondary small">Cleaned and structured records stored in SQLite database</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline-cyan btn-sm" id="btn-export-history-csv">
+                    <i class="fas fa-download me-1"></i> Export Filtered Dataset (CSV)
+                </button>
+            </div>
+
+            <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Close</th>
+                            <th>Volume</th>
+                            <th>Daily Return %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="full-history-tbody">
+                        <tr><td colspan="7" class="text-center text-secondary py-3">Loading historical data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="text-secondary small mb-1">StockForecaster Analytical Engine • C++ Backend & SQLite Architecture</p>
+            <p class="text-muted small mb-0">All predictions are educational estimates generated by algorithmic models. Not financial advice.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script>
+        let currentAnalysisSymbol = 'TCS';
+        let allUnfilteredHistory = [];
+        let filteredHistoryData = [];
+        let stockMetadata = null;
+        let globalMinDate = '';
+        let globalMaxDate = '';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            currentAnalysisSymbol = UIUtils.getActiveSymbol();
+
+            const selectEl = document.getElementById('analysis-stock-select');
+            if (selectEl) {
+                selectEl.value = currentAnalysisSymbol;
+                selectEl.addEventListener('change', (e) => {
+                    currentAnalysisSymbol = e.target.value;
+                    UIUtils.setActiveSymbol(currentAnalysisSymbol);
+                    // Reset date filters when stock changes
+                    document.getElementById('filter-start-date').value = '';
+                    document.getElementById('filter-end-date').value = '';
+                    loadInitialStockData();
+                });
+            }
+
+            // Quick Date Preset Buttons
+            const presetBtns = document.querySelectorAll('.quick-date-btn');
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    presetBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    applyQuickPreset(btn.getAttribute('data-preset'));
+                });
+            });
+
+            // Apply Custom Filter Button
+            document.getElementById('btn-apply-filter').addEventListener('click', () => {
+                const s = document.getElementById('filter-start-date').value;
+                const e = document.getElementById('filter-end-date').value;
+                applyCustomDateFilter(s, e);
+            });
+
+            // Reset Filter Button
+            document.getElementById('btn-reset-filter').addEventListener('click', () => {
+                presetBtns.forEach(b => b.classList.remove('active'));
+                const allBtn = document.querySelector('.quick-date-btn[data-preset="ALL"]');
+                if (allBtn) allBtn.classList.add('active');
+                
+                document.getElementById('filter-start-date').value = globalMinDate;
+                document.getElementById('filter-end-date').value = globalMaxDate;
+                loadFilteredData(globalMinDate, globalMaxDate);
+            });
+
+            // Preprocessing Button
+            document.getElementById('btn-run-preprocess').addEventListener('click', async () => {
+                const btn = document.getElementById('btn-run-preprocess');
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Preprocessing...`;
+                const s = document.getElementById('filter-start-date').value;
+                const e = document.getElementById('filter-end-date').value;
+
+                try {
+                    const res = await ApiService.runPreprocessing(currentAnalysisSymbol, s, e);
+                    if (res.status === 'success' && res.summary) {
+                        displayPreprocessingSummary(res.summary);
+                        UIUtils.showToast('Data preprocessed and normalized in C++ STL!', 'success');
+                    }
+                } catch (err) {
+                    UIUtils.showToast(`Preprocessing error: ${err.message}`, 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fas fa-arrows-rotate"></i> Run C++ Preprocessing`;
+                }
+            });
+
+            // Export CSV Button
+            document.getElementById('btn-export-history-csv').addEventListener('click', () => {
+                exportHistoryCSV();
+            });
+
+            await loadInitialStockData();
+        });
+
+        // Load initial complete stock history to calibrate date bounds
+        async function loadInitialStockData() {
+            const spinner = document.getElementById('analysis-spinner');
+            if (spinner) spinner.classList.add('active');
+
+            try {
+                const histRes = await ApiService.getHistory(currentAnalysisSymbol);
+                if (histRes.status === 'success' && histRes.data && histRes.data.length > 0) {
+                    allUnfilteredHistory = histRes.data;
+                    stockMetadata = histRes.stock;
+
+                    // Calibrate date inputs with actual dataset bounds
+                    globalMinDate = allUnfilteredHistory[0].date;
+                    globalMaxDate = allUnfilteredHistory[allUnfilteredHistory.length - 1].date;
+
+                    const startInput = document.getElementById('filter-start-date');
+                    const endInput = document.getElementById('filter-end-date');
+
+                    startInput.min = globalMinDate;
+                    startInput.max = globalMaxDate;
+                    startInput.value = globalMinDate;
+
+                    endInput.min = globalMinDate;
+                    endInput.max = globalMaxDate;
+                    endInput.value = globalMaxDate;
+
+                    const hintEl = document.getElementById('available-dates-hint');
+                    if (hintEl) {
+                        hintEl.innerText = `Available data: ${globalMinDate} to ${globalMaxDate} (${allUnfilteredHistory.length} trading days)`;
+                    }
+
+                    // Load full view
+                    await loadFilteredData(globalMinDate, globalMaxDate);
+                }
+            } catch (err) {
+                console.error('Error loading initial stock data:', err);
+                UIUtils.showToast(`Error: ${err.message}`, 'error');
+            } finally {
+                if (spinner) spinner.classList.remove('active');
+            }
+        }
+
+        function applyQuickPreset(preset) {
+            if (!allUnfilteredHistory || allUnfilteredHistory.length === 0) return;
+
+            let count = allUnfilteredHistory.length;
+            if (preset === '1M') count = 22;
+            else if (preset === '3M') count = 66;
+            else if (preset === '6M') count = 132;
+            else if (preset === 'ALL') count = allUnfilteredHistory.length;
+
+            const slice = allUnfilteredHistory.slice(Math.max(0, allUnfilteredHistory.length - count));
+            const newStart = slice[0].date;
+            const newEnd = slice[slice.length - 1].date;
+
+            document.getElementById('filter-start-date').value = newStart;
+            document.getElementById('filter-end-date').value = newEnd;
+
+            loadFilteredData(newStart, newEnd);
+        }
+
+        function applyCustomDateFilter(startDate, endDate) {
+            if (!startDate || !endDate) {
+                UIUtils.showToast('Please select both Start Date and End Date', 'error');
+                return;
+            }
+
+            if (startDate > endDate) {
+                UIUtils.showToast('Start Date cannot be after End Date. Adjusting automatically.', 'info');
+                const temp = startDate;
+                startDate = endDate;
+                endDate = temp;
+                document.getElementById('filter-start-date').value = startDate;
+                document.getElementById('filter-end-date').value = endDate;
+            }
+
+            // Clear active preset buttons when custom range applied
+            const presetBtns = document.querySelectorAll('.quick-date-btn');
+            presetBtns.forEach(b => b.classList.remove('active'));
+
+            loadFilteredData(startDate, endDate);
+        }
+
+        async function loadFilteredData(startDate, endDate) {
+            const spinner = document.getElementById('analysis-spinner');
+            if (spinner) spinner.classList.add('active');
+
+            try {
+                // Fetch filtered historical prices from C++ backend
+                const histRes = await ApiService.getHistory(currentAnalysisSymbol, startDate, endDate);
+                if (histRes.status === 'success') {
+                    filteredHistoryData = histRes.data || [];
+                    stockMetadata = histRes.stock || stockMetadata;
+
+                    updateHeaderInfo();
+
+                    if (filteredHistoryData.length === 0) {
+                        UIUtils.showToast(`No trading records found between ${startDate} and ${endDate}. Please select valid dates within ${globalMinDate} - ${globalMaxDate}`, 'error');
+                        document.getElementById('history-records-count').innerText = 'Showing: 0 records';
+                        ChartManager.destroyChart('analysis-price-chart');
+                        ChartManager.destroyChart('analysis-volume-chart');
+                        document.getElementById('full-history-tbody').innerHTML = `
+                            <tr><td colspan="7" class="text-center text-danger py-4">
+                                <i class="fas fa-calendar-xmark fs-4 mb-2 d-block"></i>
+                                No market records found between <strong>${startDate}</strong> and <strong>${endDate}</strong>.<br>
+                                <small class="text-secondary">Available historical bounds: ${globalMinDate} to ${globalMaxDate}</small>
+                            </td></tr>
+                        `;
+                    } else {
+                        renderCharts();
+                        populateFullHistoryTable(filteredHistoryData);
+                        document.getElementById('history-records-count').innerText = `Showing: ${filteredHistoryData.length} records (${startDate} to ${endDate})`;
+                        UIUtils.showToast(`Loaded ${filteredHistoryData.length} records for ${currentAnalysisSymbol} (${startDate} to ${endDate})`, 'success');
+                    }
+                }
+
+                // Fetch Technical Indicators for this date range
+                const analyticsRes = await ApiService.getAnalytics(currentAnalysisSymbol, startDate, endDate);
+                if (analyticsRes.status === 'success' && analyticsRes.analytics) {
+                    updateTechnicalUI(analyticsRes.analytics);
+                }
+
+                // Run C++ Preprocessing for this date range
+                const prepRes = await ApiService.runPreprocessing(currentAnalysisSymbol, startDate, endDate);
+                if (prepRes.status === 'success' && prepRes.summary) {
+                    displayPreprocessingSummary(prepRes.summary);
+                }
+
+            } catch (err) {
+                console.error('Error filtering analysis data:', err);
+                UIUtils.showToast(`Filter Error: ${err.message}`, 'error');
+            } finally {
+                if (spinner) spinner.classList.remove('active');
+            }
+        }
+
+        function updateHeaderInfo() {
+            if (!stockMetadata) return;
+            const s = stockMetadata;
+            const curr = s.currency || 'USD';
+
+            document.getElementById('analysis-symbol').innerText = s.symbol;
+            document.getElementById('analysis-company-name').innerText = s.company_name;
+            document.getElementById('analysis-market').innerText = `${s.market} • ${s.currency}`;
+            document.getElementById('analysis-current-price').innerText = UIUtils.formatCurrency(s.current_price, curr);
+
+            const isPos = s.daily_change_pct >= 0;
+            const cls = isPos ? 'bullish' : 'bearish';
+            const icon = isPos ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down';
+            document.getElementById('analysis-price-change').innerHTML = `
+                <span class="${cls}"><i class="fas ${icon}"></i> ${UIUtils.formatCurrency(s.daily_change, curr)} (${UIUtils.formatPercent(s.daily_change_pct)}) Today</span>
+            `;
+        }
+
+        function updateTechnicalUI(a) {
+            const curr = (stockMetadata && stockMetadata.currency) ? stockMetadata.currency : 'USD';
+
+            document.getElementById('tech-rsi').innerText = a.rsi14.toFixed(1);
+            const rsiBar = document.getElementById('tech-rsi-bar');
+            if (rsiBar) {
+                rsiBar.style.width = `${Math.min(100, Math.max(0, a.rsi14))}%`;
+                rsiBar.className = a.rsi14 > 70 ? 'progress-bar bg-danger' : (a.rsi14 < 30 ? 'progress-bar bg-success' : 'progress-bar bg-info');
+            }
+
+            document.getElementById('tech-macd').innerText = a.macd.toFixed(2);
+            document.getElementById('tech-macd-signal').innerText = a.macd_signal.toFixed(2);
+            document.getElementById('tech-macd-hist').innerText = a.macd_hist.toFixed(2);
+
+            document.getElementById('tech-bb-lower').innerText = UIUtils.formatCurrency(a.bb_lower, curr);
+            document.getElementById('tech-bb-mid').innerText = UIUtils.formatCurrency(a.bb_middle, curr);
+            document.getElementById('tech-bb-upper').innerText = UIUtils.formatCurrency(a.bb_upper, curr);
+
+            document.getElementById('tech-sma20').innerText = UIUtils.formatCurrency(a.sma20, curr);
+            document.getElementById('tech-sma50').innerText = UIUtils.formatCurrency(a.sma50, curr);
+
+            // Signal Badge
+            const badgeEl = document.getElementById('analysis-signal-badge');
+            const cls = a.signal === 'BUY' ? 'badge-bullish' : (a.signal === 'SELL' ? 'badge-bearish' : 'badge-neutral');
+            badgeEl.className = cls;
+            badgeEl.innerText = `${a.signal} (${a.confidence.toFixed(0)}% Conf.)`;
+
+            // Reasons List
+            const reasonsContainer = document.getElementById('tech-reasons-list');
+            if (reasonsContainer && a.reasons) {
+                let html = '';
+                a.reasons.forEach(r => {
+                    html += `<div><i class="fas fa-check-circle text-cyan me-1"></i> ${r}</div>`;
+                });
+                reasonsContainer.innerHTML = html;
+            }
+        }
+
+        function renderCharts() {
+            if (!filteredHistoryData || filteredHistoryData.length === 0) return;
+            const curr = (stockMetadata && stockMetadata.currency) ? stockMetadata.currency : 'USD';
+
+            const labels = filteredHistoryData.map(h => h.date);
+            const closes = filteredHistoryData.map(h => h.close);
+            const volumes = filteredHistoryData.map(h => h.volume);
+
+            ChartManager.renderHistoricalChart('analysis-price-chart', labels, closes, [], curr);
+            ChartManager.renderVolumeChart('analysis-volume-chart', labels, volumes, closes);
+        }
+
+        function displayPreprocessingSummary(sum) {
+            const curr = (stockMetadata && stockMetadata.currency) ? stockMetadata.currency : 'USD';
+
+            document.getElementById('prep-raw-count').innerText = sum.raw_records_count;
+            document.getElementById('prep-cleaned-count').innerText = sum.cleaned_records_count;
+            document.getElementById('prep-missing-count').innerText = sum.missing_values_handled;
+            document.getElementById('prep-dup-count').innerText = sum.duplicates_removed;
+            document.getElementById('prep-min-price').innerText = UIUtils.formatCurrency(sum.min_price, curr);
+            document.getElementById('prep-max-price').innerText = UIUtils.formatCurrency(sum.max_price, curr);
+
+            // Populate sample normalized rows
+            const tbody = document.getElementById('preprocess-samples-tbody');
+            if (!tbody || !sum.dates_sample) return;
+
+            let html = '';
+            const count = Math.min(10, sum.dates_sample.length);
+            const startIdx = sum.dates_sample.length - count;
+
+            for (let i = startIdx; i < sum.dates_sample.length; ++i) {
+                const date = sum.dates_sample[i];
+                const norm = sum.normalized_sample[i] !== undefined ? sum.normalized_sample[i].toFixed(4) : '—';
+                const std = sum.standardized_sample[i] !== undefined ? sum.standardized_sample[i].toFixed(4) : '—';
+                
+                // Find actual price
+                const histMatch = filteredHistoryData.find(h => h.date === date);
+                const actual = histMatch ? UIUtils.formatCurrency(histMatch.close, curr) : '—';
+
+                html += `
+                    <tr>
+                        <td><strong>${date}</strong></td>
+                        <td>${actual}</td>
+                        <td><span class="text-cyan fw-bold">${norm}</span></td>
+                        <td><span class="text-white">${std}</span></td>
+                        <td><span class="badge-bullish" style="font-size:0.75rem;"><i class="fas fa-check"></i> Cleaned & Verified</span></td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function populateFullHistoryTable(prices) {
+            const tbody = document.getElementById('full-history-tbody');
+            if (!tbody) return;
+            const curr = (stockMetadata && stockMetadata.currency) ? stockMetadata.currency : 'USD';
+
+            // Show newest first
+            const reversed = [...prices].reverse();
+            let html = '';
+
+            reversed.forEach(row => {
+                const isPos = row.change_percent >= 0;
+                const cls = isPos ? 'bullish' : 'bearish';
+                const icon = isPos ? 'fa-arrow-up' : 'fa-arrow-down';
+                const prefix = isPos ? '+' : '';
+
+                html += `
+                    <tr>
+                        <td><strong>${row.date}</strong></td>
+                        <td>${UIUtils.formatCurrency(row.open, curr)}</td>
+                        <td><span class="bullish">${UIUtils.formatCurrency(row.high, curr)}</span></td>
+                        <td><span class="bearish">${UIUtils.formatCurrency(row.low, curr)}</span></td>
+                        <td><strong>${UIUtils.formatCurrency(row.close, curr)}</strong></td>
+                        <td>${UIUtils.formatNumber(row.volume)}</td>
+                        <td class="${cls}"><i class="fas ${icon}"></i> ${prefix}${row.change_percent.toFixed(2)}%</td>
+                    </tr>
+                `;
+            });
+
+            tbody.innerHTML = html;
+        }
+
+        function exportHistoryCSV() {
+            if (!filteredHistoryData || filteredHistoryData.length === 0) {
+                UIUtils.showToast('No historical dataset available to export for this range', 'error');
+                return;
+            }
+
+            const curr = (stockMetadata && stockMetadata.currency) ? stockMetadata.currency : 'USD';
+            const sDate = filteredHistoryData[0].date;
+            const eDate = filteredHistoryData[filteredHistoryData.length - 1].date;
+            const filename = `${currentAnalysisSymbol}_Historical_${sDate}_to_${eDate}.csv`;
+
+            const rows = [
+                ['Stock Symbol', currentAnalysisSymbol],
+                ['Company Name', stockMetadata ? stockMetadata.company_name : currentAnalysisSymbol],
+                ['Market Exchange', stockMetadata ? stockMetadata.market : ''],
+                ['Currency', curr],
+                ['Date Range', `${sDate} to ${eDate}`],
+                ['Total Trading Days', filteredHistoryData.length],
+                [],
+                ['Date', `Open (${curr})`, `High (${curr})`, `Low (${curr})`, `Close (${curr})`, 'Volume', 'Daily Return %']
+            ];
+
+            filteredHistoryData.forEach(row => {
+                rows.push([
+                    row.date,
+                    row.open.toFixed(2),
+                    row.high.toFixed(2),
+                    row.low.toFixed(2),
+                    row.close.toFixed(2),
+                    row.volume,
+                    row.change_percent.toFixed(2)
+                ]);
+            });
+
+            UIUtils.downloadCSV(filename, rows);
+            UIUtils.showToast(`Filtered dataset downloaded as ${filename}`, 'success');
+        }
+    </script>
+</body>
+</html>

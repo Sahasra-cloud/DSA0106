@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockForecaster - Analytical Framework for Stock Price Forecasting</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom Dark Navy Theme -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Live Ticker Bar -->
+    <div class="ticker-bar">
+        <div class="ticker-wrap" id="live-ticker-wrap">
+            <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Initializing Market Ticker from C++ Backend...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-lg-4">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Stock<span class="text-cyan">Forecaster</span></span>
+            </a>
+            <button class="navbar-toggler text-white border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+                    <li class="nav-item"><a class="nav-link-custom active" href="index.html"><i class="fas fa-house"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="analysis.html"><i class="fas fa-magnifying-glass-chart"></i> Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="prediction.html"><i class="fas fa-brain"></i> Predictions</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="reports.html"><i class="fas fa-file-lines"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html"><i class="fas fa-circle-info"></i> About</a></li>
+                </ul>
+                <div class="ms-lg-3" id="backend-status-badge">
+                    <span class="badge-bullish"><i class="fas fa-circle-check"></i> C++ Backend Connected</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="py-5 text-center position-relative">
+        <div class="container py-lg-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill mb-3" style="background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3);">
+                        <i class="fas fa-microchip text-cyan"></i>
+                        <span class="text-cyan small fw-bold">Pure C++ Backend • SQLite3 • Real-Time Math Engine</span>
+                    </div>
+                    <h1 class="display-4 fw-bolder mb-3 text-white">
+                        Web-Based Analytical Framework for <span class="text-cyan">Daily Stock Price Forecasting</span>
+                    </h1>
+                    <p class="lead text-secondary mb-4 mx-auto" style="max-width: 780px;">
+                        An end-to-end financial intelligence platform combining high-performance C++ statistical algorithms, historical data preprocessing, predictive modeling (SMA, OLS Linear Regression, EMA), and interactive financial visualization.
+                    </p>
+
+                    <!-- Stock Search Bar -->
+                    <div class="mx-auto mb-4" style="max-width: 620px;">
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary text-secondary"><i class="fas fa-search"></i></span>
+                            <input type="text" id="hero-stock-search" class="form-control form-control-dark" placeholder="Search stock by symbol or company (e.g. TCS, INFY, AAPL, Google)...">
+                            <button class="btn btn-cyan px-4" id="btn-hero-search" type="button">
+                                <i class="fas fa-bolt"></i> Analyze Stock
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Navigation CTA -->
+                    <div class="d-flex justify-content-center gap-3 flex-wrap">
+                        <a href="dashboard.html" class="btn btn-cyan btn-lg">
+                            <i class="fas fa-gauge-high"></i> Launch Dashboard
+                        </a>
+                        <a href="prediction.html" class="btn btn-outline-cyan btn-lg">
+                            <i class="fas fa-brain"></i> Run Forecast Engine
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Stocks Quick Overview Cards -->
+    <section class="py-4">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0 text-white"><i class="fas fa-fire text-cyan me-2"></i>Featured Market Stocks</h4>
+                <a href="dashboard.html" class="btn btn-sm btn-outline-muted">View Full Terminal <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+
+            <div class="row g-3" id="home-stock-cards">
+                <!-- Dynamically populated or static fallback -->
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=TCS'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary text-white">NSE</span>
+                            <span class="badge-bullish"><i class="fas fa-arrow-up"></i> +0.62%</span>
+                        </div>
+                        <h5 class="text-white mb-1">TCS</h5>
+                        <p class="text-secondary small mb-3">Tata Consultancy Services Ltd</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">₹3,940.50</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=INFY'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary text-white">NSE</span>
+                            <span class="badge-bearish"><i class="fas fa-arrow-down"></i> -0.73%</span>
+                        </div>
+                        <h5 class="text-white mb-1">INFY</h5>
+                        <p class="text-secondary small mb-3">Infosys Limited</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">₹1,685.20</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=RELIANCE'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-primary text-white">NSE</span>
+                            <span class="badge-bullish"><i class="fas fa-arrow-up"></i> +0.65%</span>
+                        </div>
+                        <h5 class="text-white mb-1">RELIANCE</h5>
+                        <p class="text-secondary small mb-3">Reliance Industries Limited</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">₹2,860.80</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=AAPL'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark">NASDAQ</span>
+                            <span class="badge-bullish"><i class="fas fa-arrow-up"></i> +0.82%</span>
+                        </div>
+                        <h5 class="text-white mb-1">AAPL</h5>
+                        <p class="text-secondary small mb-3">Apple Inc.</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">$228.45</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=GOOGL'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark">NASDAQ</span>
+                            <span class="badge-bearish"><i class="fas fa-arrow-down"></i> -0.53%</span>
+                        </div>
+                        <h5 class="text-white mb-1">GOOGL</h5>
+                        <p class="text-secondary small mb-3">Alphabet Inc.</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">$176.80</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                    <div class="card-dark h-100" style="cursor:pointer;" onclick="window.location.href='dashboard.html?symbol=MSFT'">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge bg-info text-dark">NASDAQ</span>
+                            <span class="badge-bullish"><i class="fas fa-arrow-up"></i> +0.75%</span>
+                        </div>
+                        <h5 class="text-white mb-1">MSFT</h5>
+                        <p class="text-secondary small mb-3">Microsoft Corporation</p>
+                        <div class="d-flex justify-content-between align-items-end">
+                            <div>
+                                <span class="text-muted small">Current Price</span>
+                                <h4 class="text-white mb-0">$432.10</h4>
+                            </div>
+                            <span class="btn btn-sm btn-outline-cyan"><i class="fas fa-chart-line"></i> Forecast</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Architecture Modules Section -->
+    <section class="py-5" style="background: rgba(14, 23, 42, 0.4);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="text-cyan small fw-bold text-uppercase">System Architecture</span>
+                <h2 class="text-white fw-bold">Three Integrated Computational Modules</h2>
+                <p class="text-secondary mx-auto" style="max-width: 650px;">
+                    Built completely with high-performance native C++ algorithms and responsive JavaScript data visualizers.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card-dark h-100">
+                        <div class="stat-icon stat-icon-blue mb-3">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h4 class="text-white mb-2">Module 1: Ingestion & Preprocessing</h4>
+                        <p class="text-secondary small mb-3">
+                            Robust C++ STL pipeline handling missing values, temporal deduplication, daily return calculations, Min-Max [0, 1] normalization, and Z-score standardization.
+                        </p>
+                        <ul class="text-secondary small list-unstyled d-flex flex-column gap-2 mb-0">
+                            <li><i class="fas fa-check text-cyan me-2"></i>Clean & deduplicate historical datasets</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>Min-Max & Z-Score Normalization</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>SQLite embedded persistence</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card-dark h-100">
+                        <div class="stat-icon stat-icon-green mb-3">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="text-white mb-2">Module 2: Predictive Modelling Engine</h4>
+                        <p class="text-secondary small mb-3">
+                            Genuine C++ mathematical forecasting implementing Simple Moving Average (SMA), Ordinary Least Squares Linear Regression, and Exponential Moving Average (EMA).
+                        </p>
+                        <ul class="text-secondary small list-unstyled d-flex flex-column gap-2 mb-0">
+                            <li><i class="fas fa-check text-cyan me-2"></i>7, 15, and 30-Day price projections</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>Validation error metrics (MAE, MSE, RMSE, R²)</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>Transparent Buy/Sell/Hold decision engine</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card-dark h-100">
+                        <div class="stat-icon stat-icon-purple mb-3">
+                            <i class="fas fa-display"></i>
+                        </div>
+                        <h4 class="text-white mb-2">Module 3: Visualisation & Reports</h4>
+                        <p class="text-secondary small mb-3">
+                            Modern financial terminal powered by Chart.js, Bootstrap 5, responsive layouts, candlestick/line charts, confidence interval envelopes, and one-click CSV export.
+                        </p>
+                        <ul class="text-secondary small list-unstyled d-flex flex-column gap-2 mb-0">
+                            <li><i class="fas fa-check text-cyan me-2"></i>Interactive forecast & historical charts</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>RSI, MACD, Bollinger Bands panels</li>
+                            <li><i class="fas fa-check text-cyan me-2"></i>Export full reports & logs to CSV</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <h5 class="text-white mb-1"><i class="fas fa-chart-line text-cyan me-2"></i>StockForecaster C++ Engine</h5>
+                    <p class="text-secondary small mb-0">Designed & Implemented as a Web-Based Analytical Framework for Daily Stock Price Forecasting.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <div class="d-flex justify-content-center justify-content-md-end gap-3 small mb-2">
+                        <a href="dashboard.html" class="footer-link">Dashboard</a>
+                        <a href="analysis.html" class="footer-link">Analysis</a>
+                        <a href="prediction.html" class="footer-link">Forecasting</a>
+                        <a href="reports.html" class="footer-link">Reports</a>
+                        <a href="about.html" class="footer-link">About Architecture</a>
+                    </div>
+                    <p class="text-muted small mb-0">Educational & analytical software. Not financial investment advice.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        document.getElementById('btn-hero-search').addEventListener('click', () => {
+            const val = document.getElementById('hero-stock-search').value.trim();
+            if (val) {
+                window.location.href = `dashboard.html?symbol=${encodeURIComponent(val.toUpperCase())}`;
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        });
+
+        document.getElementById('hero-stock-search').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('btn-hero-search').click();
+            }
+        });
+    </script>
+</body>
+</html>

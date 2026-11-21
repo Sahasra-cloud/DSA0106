@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Stock Price Forecasting Framework</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Live Ticker Bar -->
+    <div class="ticker-bar">
+        <div class="ticker-wrap" id="live-ticker-wrap">
+            <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Loading Market Feeds...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-lg-4">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Stock<span class="text-cyan">Forecaster</span></span>
+            </a>
+            <button class="navbar-toggler text-white border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html"><i class="fas fa-house"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="analysis.html"><i class="fas fa-magnifying-glass-chart"></i> Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="prediction.html"><i class="fas fa-brain"></i> Predictions</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="reports.html"><i class="fas fa-file-lines"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html"><i class="fas fa-circle-info"></i> About</a></li>
+                </ul>
+                <div class="ms-lg-3" id="backend-status-badge">
+                    <span class="badge-bullish"><i class="fas fa-circle-check"></i> C++ Backend</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container-fluid px-lg-4 py-4 flex-grow-1 position-relative">
+        <!-- Spinner Backdrop -->
+        <div id="dashboard-spinner" class="spinner-backdrop active">
+            <div class="text-center">
+                <div class="spinner-border text-cyan mb-2" role="status" style="width: 3rem; height: 3rem;"></div>
+                <div class="text-white fw-semibold">Processing Market Data in C++ Engine...</div>
+            </div>
+        </div>
+
+        <!-- Module Breadcrumb & Identity Banner -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35);">
+                <span class="badge bg-info text-dark fw-bold">MODULE 3</span>
+                <span class="text-cyan small fw-bold">Web-Based User Interface & Visualisation Module</span>
+            </div>
+            <div class="text-secondary small">
+                <i class="fas fa-microchip text-cyan me-1"></i> Multi-Threaded C++ Backend • SQLite Embedded
+            </div>
+        </div>
+
+        <!-- Dashboard Header & Stock Switcher -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h2 class="text-white fw-bold mb-0" id="dash-stock-symbol">TCS</h2>
+                    <span class="badge bg-primary text-white" id="dash-stock-market">NSE (India)</span>
+                    <span id="stat-market-signal">
+                        <span class="badge-neutral">HOLD (Calculating...)</span>
+                    </span>
+                </div>
+                <div class="text-secondary small" id="dash-stock-name">Tata Consultancy Services Ltd</div>
+            </div>
+
+            <!-- Quick Stock Switcher Pills -->
+            <div class="d-flex flex-column align-items-lg-end gap-2">
+                <div class="small text-secondary fw-semibold">Quick Select Stock:</div>
+                <div class="stock-pills">
+                    <button class="stock-pill active" data-symbol="TCS">TCS</button>
+                    <button class="stock-pill" data-symbol="INFY">INFY</button>
+                    <button class="stock-pill" data-symbol="RELIANCE">RELIANCE</button>
+                    <button class="stock-pill" data-symbol="AAPL">AAPL</button>
+                    <button class="stock-pill" data-symbol="GOOGL">GOOGL</button>
+                    <button class="stock-pill" data-symbol="MSFT">MSFT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metric KPI Stat Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <div class="card-stat-header">
+                        <span class="stat-label">Total Stocks Analysed</span>
+                        <div class="stat-icon stat-icon-blue"><i class="fas fa-layer-group"></i></div>
+                    </div>
+                    <div class="stat-value" id="stat-total-stocks">6</div>
+                    <div class="text-secondary small"><i class="fas fa-database text-cyan me-1"></i> SQLite Database Synced</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <div class="card-stat-header">
+                        <span class="stat-label">Selected Stock Price</span>
+                        <div class="stat-icon stat-icon-green"><i class="fas fa-coins"></i></div>
+                    </div>
+                    <div class="stat-value text-cyan" id="stat-stock-price">—</div>
+                    <div class="small" id="stat-stock-change">
+                        <span class="bullish"><i class="fas fa-arrow-trend-up"></i> +0.00 (0.00%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <div class="card-stat-header">
+                        <span class="stat-label">Market Trend</span>
+                        <div class="stat-icon stat-icon-purple"><i class="fas fa-chart-line"></i></div>
+                    </div>
+                    <div class="stat-value" style="font-size: 1.45rem;" id="stat-market-trend">
+                        <span class="badge-neutral">Neutral</span>
+                    </div>
+                    <div class="text-secondary small"><i class="fas fa-calculator text-cyan me-1"></i> Multi-Period Moving Averages</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <div class="card-stat-header">
+                        <span class="stat-label">Annualized Volatility</span>
+                        <div class="stat-icon stat-icon-amber"><i class="fas fa-wave-square"></i></div>
+                    </div>
+                    <div class="stat-value" id="metric-volatility">—</div>
+                    <div class="text-secondary small">
+                        52W: <span class="bearish" id="metric-52low">—</span> / <span class="bullish" id="metric-52high">—</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="row g-4 mb-4">
+            <!-- Historical Stock Price Chart -->
+            <div class="col-xl-7">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                                <h5 class="text-white mb-0"><i class="fas fa-chart-area text-cyan me-2"></i>Historical Price Movement</h5>
+                            </div>
+                            <span class="text-secondary small">Daily close prices over time with zoom & tooltips</span>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-outline-muted date-filter-btn" data-range="1M">1M</button>
+                            <button class="btn btn-outline-muted date-filter-btn" data-range="3M">3M</button>
+                            <button class="btn btn-outline-muted date-filter-btn" data-range="6M">6M</button>
+                            <button class="btn btn-outline-muted date-filter-btn" data-range="1Y">1Y</button>
+                            <button class="btn btn-outline-muted date-filter-btn active" data-range="ALL">ALL</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dash-historical-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Predicted Price Preview Chart -->
+            <div class="col-xl-5">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-success text-white px-2 py-1">MODULE 2</span>
+                                <h5 class="text-white mb-0"><i class="fas fa-brain text-success me-2"></i>C++ Forecast Preview</h5>
+                            </div>
+                            <span class="text-secondary small">7-Day projection with 95% confidence band</span>
+                        </div>
+                        <a href="prediction.html" class="btn btn-sm btn-cyan">Full Lab <i class="fas fa-arrow-right ms-1"></i></a>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="dash-forecast-preview-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Indicators Strip & Quick Summary -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">RSI (14-Day)</div>
+                    <h5 class="text-white fw-bold mb-0" id="metric-rsi">—</h5>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">20-Day SMA</div>
+                    <h5 class="text-cyan fw-bold mb-0" id="metric-sma20">—</h5>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">50-Day SMA</div>
+                    <h5 class="text-white fw-bold mb-0" id="metric-sma50">—</h5>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">Forecast Engine</div>
+                    <h5 class="text-white fw-bold mb-0">C++ OLS / EMA</h5>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">Database</div>
+                    <h5 class="text-white fw-bold mb-0">SQLite3 WAL</h5>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="card-dark text-center py-3">
+                    <div class="text-secondary small mb-1">Data Source</div>
+                    <h5 class="text-cyan fw-bold mb-0">Verified Demo</h5>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Historical Stock Price Table -->
+        <div class="card-dark">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="text-white mb-0"><i class="fas fa-table-list text-cyan me-2"></i>Recent Daily Stock Prices</h5>
+                    <span class="text-secondary small">Latest 10 daily trading records stored in SQLite</span>
+                </div>
+                <a href="analysis.html" class="btn btn-sm btn-outline-cyan"><i class="fas fa-table me-1"></i> Full Historical Table</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Open</th>
+                            <th>High</th>
+                            <th>Low</th>
+                            <th>Close</th>
+                            <th>Volume</th>
+                            <th>Change %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-prices-tbody">
+                        <tr><td colspan="7" class="text-center text-secondary py-3">Loading prices from C++ database...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="text-secondary small mb-1">StockForecaster Analytical Engine • C++ Backend & SQLite Architecture</p>
+            <p class="text-muted small mb-0">All predictions are educational estimates generated by algorithmic models. Not financial advice.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

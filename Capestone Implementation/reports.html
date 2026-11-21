@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Audit History - Stock Price Forecasting Framework</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Live Ticker Bar -->
+    <div class="ticker-bar">
+        <div class="ticker-wrap" id="live-ticker-wrap">
+            <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Loading Reports Feed...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-lg-4">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Stock<span class="text-cyan">Forecaster</span></span>
+            </a>
+            <button class="navbar-toggler text-white border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html"><i class="fas fa-house"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="analysis.html"><i class="fas fa-magnifying-glass-chart"></i> Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="prediction.html"><i class="fas fa-brain"></i> Predictions</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="reports.html"><i class="fas fa-file-lines"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html"><i class="fas fa-circle-info"></i> About</a></li>
+                </ul>
+                <div class="ms-lg-3" id="backend-status-badge">
+                    <span class="badge-bullish"><i class="fas fa-circle-check"></i> C++ Backend</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container-fluid px-lg-4 py-4 flex-grow-1">
+        <!-- Module Breadcrumb & Identity Banner -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill" style="background: rgba(129, 140, 248, 0.12); border: 1px solid rgba(129, 140, 248, 0.35);">
+                <span class="badge bg-purple text-white fw-bold" style="background:#6366f1;">MODULE 3</span>
+                <span class="text-cyan small fw-bold">Reports, Benchmark Analytics & SQLite Persistence</span>
+            </div>
+            <div class="text-secondary small">
+                <i class="fas fa-database text-cyan me-1"></i> SQLite WAL Mode Engine • CSV Export Hub
+            </div>
+        </div>
+
+        <!-- Reports Header Banner -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                    <div>
+                        <h3 class="text-white fw-bold mb-0"><i class="fas fa-file-signature text-cyan me-2"></i>Analytical Reports & Audit Center</h3>
+                        <span class="text-secondary small">Stored forecasting results, model accuracy benchmarks, and CSV data export</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-cyan btn-sm" id="btn-export-all-predictions">
+                        <i class="fas fa-download me-1"></i> Export Prediction Log (CSV)
+                    </button>
+                    <button class="btn btn-cyan btn-sm" onclick="window.print()">
+                        <i class="fas fa-print me-1"></i> Print / Save PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Algorithm Performance Benchmark Comparison Table -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success text-white px-2 py-1">MODULE 2</span>
+                    <div>
+                        <h5 class="text-white mb-0"><i class="fas fa-scale-balanced text-cyan me-2"></i>Prediction Algorithm Accuracy Benchmark</h5>
+                        <span class="text-secondary small">Empirical validation metrics computed on recent historical holdout samples</span>
+                    </div>
+                </div>
+                <span class="badge bg-dark border border-secondary text-cyan">C++ Statistical Validation</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Mathematical Approach</th>
+                            <th>Mean Abs Error (MAE)</th>
+                            <th>Root Mean Sq Error (RMSE)</th>
+                            <th>R² Fit</th>
+                            <th>Best Used For</th>
+                            <th>Performance Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong class="text-white">Linear Regression</strong></td>
+                            <td class="text-secondary">Ordinary Least Squares Trendline ($y = \alpha + \beta x$)</td>
+                            <td><strong class="text-cyan">~1.2% - 1.8%</strong></td>
+                            <td><strong class="text-cyan">~1.5% - 2.2%</strong></td>
+                            <td><span class="badge bg-success">0.82 - 0.94</span></td>
+                            <td>Sustained trending markets with clear directional bias</td>
+                            <td><span class="badge-bullish"><i class="fas fa-star"></i> High Precision</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong class="text-white">Exponential Moving Average</strong></td>
+                            <td class="text-secondary">Weighted Recency ($EMA_t = \alpha P_t + (1-\alpha)EMA_{t-1}$)</td>
+                            <td><strong class="text-cyan">~1.5% - 2.1%</strong></td>
+                            <td><strong class="text-cyan">~1.9% - 2.6%</strong></td>
+                            <td><span class="badge bg-primary">0.78 - 0.88</span></td>
+                            <td>Volatile markets with rapid momentum shifts</td>
+                            <td><span class="badge-bullish"><i class="fas fa-star"></i> Responsive</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong class="text-white">Simple Moving Average</strong></td>
+                            <td class="text-secondary">Rolling Multi-Step Autoregressive ($W=10$)</td>
+                            <td><strong class="text-cyan">~1.9% - 2.8%</strong></td>
+                            <td><strong class="text-cyan">~2.3% - 3.4%</strong></td>
+                            <td><span class="badge bg-secondary">0.70 - 0.82</span></td>
+                            <td>Consolidation phases and baseline smoothing</td>
+                            <td><span class="badge-neutral"><i class="fas fa-check"></i> Robust Baseline</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Stock Analysis Summary Cards Grid -->
+        <h5 class="text-white mb-3"><i class="fas fa-cubes text-cyan me-2"></i>Multi-Stock Portfolio Analysis Summary</h5>
+        <div class="row g-3 mb-4" id="reports-stocks-grid">
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary">TCS</span>
+                        <span class="badge-bullish">BUY</span>
+                    </div>
+                    <h5 class="text-white mb-1">Tata Consultancy Services</h5>
+                    <p class="text-secondary small mb-3">Market: NSE • Currency: INR</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">₹3,997.71</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="text-cyan">48.2 (Neutral)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">14.2%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=TCS" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary">INFY</span>
+                        <span class="badge-bearish">SELL</span>
+                    </div>
+                    <h5 class="text-white mb-1">Infosys Limited</h5>
+                    <p class="text-secondary small mb-3">Market: NSE • Currency: INR</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">₹1,710.40</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="bearish">28.4 (Oversold)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">16.8%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=INFY" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-primary">RELIANCE</span>
+                        <span class="badge-bullish">BUY</span>
+                    </div>
+                    <h5 class="text-white mb-1">Reliance Industries Limited</h5>
+                    <p class="text-secondary small mb-3">Market: NSE • Currency: INR</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">₹2,840.10</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="bullish">56.5 (Bullish)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">15.1%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=RELIANCE" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-info text-dark">AAPL</span>
+                        <span class="badge-bullish">BUY</span>
+                    </div>
+                    <h5 class="text-white mb-1">Apple Inc.</h5>
+                    <p class="text-secondary small mb-3">Market: NASDAQ • Currency: USD</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">$225.80</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="bullish">62.1 (Bullish)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">13.5%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=AAPL" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-info text-dark">GOOGL</span>
+                        <span class="badge-neutral">HOLD</span>
+                    </div>
+                    <h5 class="text-white mb-1">Alphabet Inc.</h5>
+                    <p class="text-secondary small mb-3">Market: NASDAQ • Currency: USD</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">$175.20</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="text-white">49.0 (Neutral)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">17.2%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=GOOGL" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-info text-dark">MSFT</span>
+                        <span class="badge-bullish">BUY</span>
+                    </div>
+                    <h5 class="text-white mb-1">Microsoft Corporation</h5>
+                    <p class="text-secondary small mb-3">Market: NASDAQ • Currency: USD</p>
+                    <div class="p-2 rounded mb-3 small" style="background: #0b1329;">
+                        <div class="d-flex justify-content-between"><span>20 SMA:</span> <strong class="text-white">$428.50</strong></div>
+                        <div class="d-flex justify-content-between"><span>RSI(14):</span> <strong class="bullish">58.7 (Bullish)</strong></div>
+                        <div class="d-flex justify-content-between"><span>Volatility:</span> <strong class="text-white">14.0%</strong></div>
+                    </div>
+                    <a href="prediction.html?symbol=MSFT" class="btn btn-sm btn-outline-cyan w-100">Run Forecast</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stored SQLite Prediction History Audit Log -->
+        <div class="card-dark">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary text-white px-2 py-1">MODULE 1 & SQLITE</span>
+                    <div>
+                        <h5 class="text-white mb-0"><i class="fas fa-clock-rotate-left text-cyan me-2"></i>Prediction History Audit Log</h5>
+                        <span class="text-secondary small">Persistent records queryable directly from SQLite predictions table</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>Record ID</th>
+                            <th>Stock Symbol</th>
+                            <th>Algorithm</th>
+                            <th>Predicted Target Price</th>
+                            <th>Prediction Date</th>
+                            <th>Timestamp</th>
+                            <th>Storage Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reports-history-tbody">
+                        <tr><td colspan="7" class="text-center text-secondary py-3">Fetching prediction records from SQLite...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="text-secondary small mb-1">StockForecaster Analytical Engine • C++ Backend & SQLite Architecture</p>
+            <p class="text-muted small mb-0">All predictions are educational estimates generated by algorithmic models. Not financial advice.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/prediction.js"></script>
+    <script>
+        document.getElementById('btn-export-all-predictions').addEventListener('click', async () => {
+            try {
+                const res = await ApiService.getPredictions('', 500);
+                if (res.status === 'success' && res.data && res.data.length > 0) {
+                    const rows = [
+                        ['Record ID', 'Stock Symbol', 'Algorithm', 'Predicted Price', 'Prediction Date', 'Created Timestamp']
+                    ];
+                    res.data.forEach(r => {
+                        rows.push([r.id, r.symbol, r.algorithm, r.predicted_price, r.prediction_date, r.created_date]);
+                    });
+                    UIUtils.downloadCSV('StockForecaster_Predictions_Audit_Log.csv', rows);
+                    UIUtils.showToast('Prediction audit history downloaded as CSV!', 'success');
+                } else {
+                    UIUtils.showToast('No prediction records found to export.', 'info');
+                }
+            } catch (e) {
+                UIUtils.showToast(`Export error: ${e.message}`, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

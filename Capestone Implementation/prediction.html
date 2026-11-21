@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predictive Modelling & Forecasting - Stock Price Forecasting Framework</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Top Live Ticker Bar -->
+    <div class="ticker-bar">
+        <div class="ticker-wrap" id="live-ticker-wrap">
+            <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Initializing Predictive Engine...</span>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid px-lg-4">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Stock<span class="text-cyan">Forecaster</span></span>
+            </a>
+            <button class="navbar-toggler text-white border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-lg-2">
+                    <li class="nav-item"><a class="nav-link-custom" href="index.html"><i class="fas fa-house"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="dashboard.html"><i class="fas fa-gauge-high"></i> Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="analysis.html"><i class="fas fa-magnifying-glass-chart"></i> Analysis</a></li>
+                    <li class="nav-item"><a class="nav-link-custom active" href="prediction.html"><i class="fas fa-brain"></i> Predictions</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="reports.html"><i class="fas fa-file-lines"></i> Reports</a></li>
+                    <li class="nav-item"><a class="nav-link-custom" href="about.html"><i class="fas fa-circle-info"></i> About</a></li>
+                </ul>
+                <div class="ms-lg-3" id="backend-status-badge">
+                    <span class="badge-bullish"><i class="fas fa-circle-check"></i> C++ Backend</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container-fluid px-lg-4 py-4 flex-grow-1 position-relative">
+        <div id="pred-spinner" class="spinner-backdrop active">
+            <div class="text-center">
+                <div class="spinner-border text-cyan mb-2" role="status" style="width: 3rem; height: 3rem;"></div>
+                <div class="text-white fw-semibold">Running C++ Mathematical Forecasting Engine...</div>
+            </div>
+        </div>
+
+        <!-- Module Breadcrumb & Identity Banner -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.35);">
+                <span class="badge bg-success text-white fw-bold">MODULE 2</span>
+                <span class="text-success small fw-bold">Predictive Modelling & Analytical Engine</span>
+            </div>
+            <div class="text-secondary small">
+                <i class="fas fa-microchip text-cyan me-1"></i> Multi-Step C++ Algorithms (SMA, OLS, EMA) • Validation Holdout
+            </div>
+        </div>
+
+        <!-- Forecasting Configuration Header Card -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-success text-white px-2 py-1">MODULE 2</span>
+                    <div>
+                        <h4 class="text-white fw-bold mb-0"><i class="fas fa-robot text-cyan me-2"></i>Predictive Modelling Lab</h4>
+                        <span class="text-secondary small">C++ Analytical Engine for Multi-Day Price Projections</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-dark border border-secondary text-cyan px-3 py-2">
+                        <i class="fas fa-shield-halved me-1"></i> Transparent Mathematical Execution
+                    </span>
+                </div>
+            </div>
+
+            <!-- Parameters Selection Grid -->
+            <div class="row g-3 align-items-end">
+                <!-- Stock Selection -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-chart-pie me-1"></i> Target Stock</label>
+                    <select id="pred-stock-select" class="form-select form-select-dark">
+                        <option value="TCS">TCS - Tata Consultancy Services Ltd</option>
+                        <option value="INFY">INFY - Infosys Limited</option>
+                        <option value="RELIANCE">RELIANCE - Reliance Industries Limited</option>
+                        <option value="AAPL">AAPL - Apple Inc.</option>
+                        <option value="GOOGL">GOOGL - Alphabet Inc.</option>
+                        <option value="MSFT">MSFT - Microsoft Corporation</option>
+                    </select>
+                </div>
+
+                <!-- Algorithm Selection -->
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-diagram-project me-1"></i> Prediction Algorithm</label>
+                    <select id="pred-algo-select" class="form-select form-select-dark">
+                        <option value="linear_regression">Linear Regression (Ordinary Least Squares)</option>
+                        <option value="moving_average">Simple Moving Average (SMA Rolling Autoregressive)</option>
+                        <option value="exponential_moving_average">Exponential Moving Average (EMA Momentum Damped)</option>
+                    </select>
+                </div>
+
+                <!-- Forecast Horizon Duration Selection -->
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label text-secondary small fw-bold"><i class="fas fa-calendar-days me-1"></i> Forecast Horizon</label>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-muted flex-grow-1 duration-btn active" data-days="7">7 Days</button>
+                        <button type="button" class="btn btn-outline-muted flex-grow-1 duration-btn" data-days="15">15 Days</button>
+                        <button type="button" class="btn btn-outline-muted flex-grow-1 duration-btn" data-days="30">30 Days</button>
+                    </div>
+                </div>
+
+                <!-- Execute Button -->
+                <div class="col-lg-2 col-md-6">
+                    <button class="btn btn-cyan w-100" id="btn-run-prediction">
+                        <i class="fas fa-microchip"></i> Execute C++ Forecast
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Target Stock Header Summary -->
+        <div class="card-dark mb-4">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h3 class="text-white fw-bold mb-0" id="pred-stock-header-name">Tata Consultancy Services Ltd (TCS)</h3>
+                    <span class="text-secondary small" id="pred-stock-header-price">Loading price and market...</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div id="pred-signal-badge">
+                        <span class="badge-bullish" style="font-size:1.1rem;padding:0.5rem 1.2rem;">
+                            <i class="fas fa-shield-halved"></i> BUY SIGNAL
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction Performance & KPI Metrics Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <span class="stat-label">Projected Target Price</span>
+                    <div class="stat-value text-cyan" id="pred-target-price">—</div>
+                    <div class="small" id="pred-change-pct">—</div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <span class="stat-label">Model Confidence</span>
+                    <div class="stat-value text-white" id="pred-confidence-text">85%</div>
+                    <div class="progress mt-2" style="height: 6px; background: #1e293b;">
+                        <div id="pred-confidence-bar" class="progress-bar bg-success" style="width: 85%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <span class="stat-label">Mean Absolute Error (MAE)</span>
+                    <div class="stat-value text-white" id="metric-mae">—</div>
+                    <div class="text-secondary small">Root Mean Squared Error (RMSE): <strong class="text-white" id="metric-rmse">—</strong></div>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="card-dark card-stat h-100">
+                    <span class="stat-label">Mean Squared Error (MSE)</span>
+                    <div class="stat-value text-white" id="metric-mse">—</div>
+                    <div class="text-secondary small">Goodness of Fit (R²): <strong class="text-cyan" id="metric-r2">—</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Chart & Recommendation Rationale -->
+        <div class="row g-4 mb-4">
+            <!-- Actual vs Forecast Chart -->
+            <div class="col-xl-8">
+                <div class="card-dark h-100">
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                        <div>
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                                <span class="badge bg-info text-dark px-2 py-1">MODULE 3</span>
+                                <h5 class="text-white mb-0"><i class="fas fa-chart-line text-cyan me-2"></i>Historical vs Forecast Price Trajectory</h5>
+                            </div>
+                            <span class="text-secondary small">45-day history spliced with future projected path and 95% confidence bounds</span>
+                        </div>
+                        <button class="btn btn-outline-cyan btn-sm" id="btn-download-pred-csv">
+                            <i class="fas fa-file-csv me-1"></i> Download Forecast CSV
+                        </button>
+                    </div>
+                    <div class="chart-container" style="min-height: 380px;">
+                        <canvas id="pred-comparison-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendation & Algorithm Blueprint -->
+            <div class="col-xl-4">
+                <div class="card-dark h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="text-white mb-3"><i class="fas fa-lightbulb text-cyan me-2"></i>Analytical Rationale</h5>
+                        <div class="p-3 rounded mb-3" style="background:#0b1329; border: 1px solid var(--card-border);">
+                            <p class="text-secondary small mb-0" id="pred-rationale">
+                                Predictive model evaluates historical slope, standard deviations, and mean-reversion forces to compute expected price distributions.
+                            </p>
+                        </div>
+
+                        <h6 class="text-white mb-2"><i class="fas fa-square-root-variable text-cyan me-2"></i>Mathematical Formulation:</h6>
+                        <div class="p-3 rounded mb-3" style="background:#0b1329; border: 1px solid var(--card-border); font-family: monospace; font-size: 0.85rem; color: #38bdf8;">
+                            y = α + βx<br>
+                            β = Σ(x - x̄)(y - ȳ) / Σ(x - x̄)²<br>
+                            α = ȳ - βx̄<br>
+                            RMSE = √(1/M Σ(y - ŷ)²)
+                        </div>
+
+                        <div class="alert alert-dark border-secondary small text-secondary py-2 mb-0">
+                            <i class="fas fa-info-circle text-cyan me-1"></i> <strong>Educational Disclaimer:</strong> Forecasts are algorithmic estimates generated for academic and analytical demonstration. Not financial investment advice.
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="reports.html" class="btn btn-outline-muted w-100">
+                            <i class="fas fa-clock-rotate-left me-1"></i> View SQLite Prediction Audit History
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Forecast Breakdown Table -->
+        <div class="card-dark">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="text-white mb-0"><i class="fas fa-calendar-check text-cyan me-2"></i>Daily Forecast Breakdown</h5>
+                    <span class="text-secondary small">Future trading days projection with upper and lower volatility margins</span>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table-dark-custom">
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Forecast Date</th>
+                            <th>Predicted Price</th>
+                            <th>Projected Return %</th>
+                            <th>Lower 95% Bound</th>
+                            <th>Upper 95% Bound</th>
+                            <th>Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pred-forecast-tbody">
+                        <tr><td colspan="7" class="text-center text-secondary py-3">Generating predictions in C++ engine...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p class="text-secondary small mb-1">StockForecaster Analytical Engine • C++ Backend & SQLite Architecture</p>
+            <p class="text-muted small mb-0">All predictions are educational estimates generated by algorithmic models. Not financial advice.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/prediction.js"></script>
+</body>
+</html>
